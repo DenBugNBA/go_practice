@@ -1,11 +1,13 @@
 module go_practice
 
-go 1.23
-
-require github.com/rs/zerolog v1.33.0
+go 1.24
 
 require (
-	github.com/gocql/gocql v1.7.0 // indirect
+	github.com/gocql/gocql v1.7.0
+	github.com/rs/zerolog v1.33.0
+)
+
+require (
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
