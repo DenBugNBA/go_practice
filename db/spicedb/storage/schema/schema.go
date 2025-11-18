@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"log"
 
 	pb "github.com/authzed/authzed-go/proto/authzed/api/v1"
@@ -11,21 +12,19 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-const schema = `definition test/user {}
-definition test/post {
-	relation reader: test/user
-	relation writer: test/user
-	permission read = reader + writer
-	permission write = writer
-}`
+//go:embed schema.zed
+var schema string
 
-const spicedbEndpoint = "localhost:50051"
+const (
+	spicedbEndpoint = "localhost:50051"
+	token           = "foobar"
+)
 
 func main() {
 	client, err := authzed.NewClient(
 		spicedbEndpoint,
+		grpcutil.WithInsecureBearerToken(token),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpcutil.WithBearerToken("sometoken"),
 	)
 	if err != nil {
 		log.Fatalf("unable to initialize client: %s", err)
@@ -36,4 +35,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to write schema: %s", err)
 	}
+	log.Println("wrote schema")
 }

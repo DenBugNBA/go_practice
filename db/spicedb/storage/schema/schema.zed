@@ -1,0 +1,10 @@
+definition user {}
+
+definition document {
+    relation owner: user
+    relation reader: user
+}
+
+definition organization {
+    relation admin: user
+}

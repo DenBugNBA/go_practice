@@ -1,5 +1,5 @@
 services:
-  database:
+  postgres:
     image: "postgres:17.5-alpine"
     healthcheck:
       test: "pg_isready -U postgres"
@@ -14,16 +14,15 @@ services:
       - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
       - "POSTGRES_DB=${POSTGRES_DBNAME}"
 
-
   migrate:
     image: "authzed/spicedb"
     command: "migrate head"
     restart: "on-failure"
     environment:
       - "SPICEDB_DATASTORE_ENGINE=postgres"
-      - "SPICEDB_DATASTORE_CONN_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/spicedb?sslmode=disable"
+      - "SPICEDB_DATASTORE_CONN_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/spicedb?sslmode=disable"
     depends_on:
-      database:
+      postgres:
         condition: service_healthy
 
   spicedb:
@@ -36,17 +35,14 @@ services:
     environment:
       - "SPICEDB_GRPC_PRESHARED_KEY=${SPICEDB_GRPC_PRESHARED_KEY}"
       - "SPICEDB_DATASTORE_ENGINE=postgres"
-      - "SPICEDB_DATASTORE_CONN_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/spicedb?sslmode=disable"
-      - "SPICEDB_DATASTORE_BOOTSTRAP_FILES=/bootstrap/schema.yaml"
+      - "SPICEDB_DATASTORE_CONN_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/spicedb?sslmode=disable"
     healthcheck:
       test: [ "CMD", "/usr/local/bin/grpc_health_probe", "-addr=:50051" ]
       interval: "5s"
       timeout: "30s"
       retries: 3
-    volumes:
-      - "./schema.yaml:/bootstrap/schema.yaml"
     depends_on:
-      database:
+      postgres:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
