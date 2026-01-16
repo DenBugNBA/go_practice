@@ -6,12 +6,13 @@ import (
 
 	"github.com/authzed/authzed-go/v1"
 	"github.com/authzed/grpcutil"
-	"go_practice/db/spicedb/documents_example/authz"
-	pb "go_practice/db/spicedb/documents_example/gen"
-	"go_practice/db/spicedb/documents_example/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+
+	"go_practice/db/spicedb/documents_example/authz"
+	pb "go_practice/db/spicedb/documents_example/gen"
+	"go_practice/db/spicedb/documents_example/service"
 )
 
 const (
