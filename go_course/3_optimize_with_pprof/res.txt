@@ -1,0 +1,2 @@
+BenchmarkSlow-12    	      58	  20973721 ns/op	20330567 B/op	  182862 allocs/op
+BenchmarkFast-12    	     972	   1252548 ns/op	  495865 B/op	    6488 allocs/op
